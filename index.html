@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Traction à un bras – 12 semaines (mobile)</title>
+  <meta name="description" content="Programme 12 semaines optimisé smartphone pour progresser vers la traction à un bras. Timers intégrés + export calendrier (.ics) pour alarmes qui sonnent écran éteint." />
+  <style>
+    :root{
+      --bg:#0b0d12; --panel:#121621; --panel-2:#1a2030; --text:#eef3fb; --muted:#9fb0c3;
+      --accent:#58b7ff; --accent2:#00d18f; --warn:#ffd166; --danger:#ff6b6b; --ok:#7cf4b5;
+      --border:rgba(255,255,255,.08); --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    .light{ --bg:#f7f8fb; --panel:#ffffff; --panel-2:#f2f4f8; --text:#151a22; --muted:#4c5870; --accent:#0066ff; --accent2:#0cab6b; --border:rgba(0,0,0,.1); }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial}
+    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+    .container{max-width:960px;margin:0 auto;padding:16px}
+    header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,var(--bg),rgba(0,0,0,0));backdrop-filter:saturate(1.2) blur(6px)}
+    .nav{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--bg),transparent 30%)}
+    .brand{font-weight:800;letter-spacing:.2px}
+    .toolbar{display:flex;gap:8px}
+    .btn{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;min-height:44px}
+    .btn:active{transform:translateY(1px)}
+    .hero{padding:12px 16px}
+    .hero h1{font-size:clamp(22px,5vw,34px);margin:0 0 4px}
+    .muted{color:var(--muted)}
+
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+    .card h2{margin:6px 0 8px;font-size:20px}
+    .card h3{margin:10px 0 6px;font-size:17px}
+    ul.clean{margin:8px 0 0;padding:0 0 0 18px}
+    li+li{margin-top:6px}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+    .sessions{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:900px){.sessions{grid-template-columns:1fr 1fr}}
+    .session{border:1px dashed var(--border);border-radius:12px;padding:12px}
+
+    .pill{display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:color-mix(in srgb,var(--panel-2),transparent 30%);font-size:12px;color:var(--muted)}
+
+    .weeks{display:grid;gap:8px}
+    .week-row{display:grid;grid-template-columns:110px repeat(3,1fr);gap:8px;align-items:center}
+    .week-row .label{font-weight:700}
+    .cb{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--panel-2),transparent 40%)}
+    .cb input{transform:scale(1.2)}
+
+    .timer-card{position:relative}
+    .timer-display{font-variant-numeric:tabular-nums; font-size: clamp(28px, 12vw, 56px); font-weight: 800; letter-spacing: .03em; text-align:center; margin: 6px 0 0}
+    .timer-step{ text-align:center; margin-top:4px; color:var(--muted)}
+    .timer-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+    .selects{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .selects select, .selects input{width:100%; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--panel-2); color:var(--text)}
+
+    .sticky-bottom{position:sticky;bottom:0;z-index:40;background:linear-gradient(0deg,var(--panel),transparent 70%);padding-bottom:env(safe-area-inset-bottom)}
+    .bottom-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .bottom-bar .btn{justify-content:center}
+
+    footer{margin:20px 0 80px;color:var(--muted);text-align:center}
+
+    @media (max-width:480px){
+      .toolbar a{display:none}
+      .week-row{grid-template-columns:90px repeat(3,1fr)}
+    }
+  </style>
+</head>
+<body class="light" data-theme="light">
+  <header>
+    <nav class="nav container" aria-label="Navigation principale">
+      <div class="brand">Traction 1‑Bras · 12 sem</div>
+      <div class="toolbar">
+        <button class="btn" id="themeBtn" title="Mode sombre/clair">🌗 Thème</button>
+        <button class="btn" id="printBtn" title="Imprimer/PDF">🖨️</button>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero container">
+    <h1>Programme Traaction à un bras — 12 semaines</h1>
+    <p class="muted">Optimisé smartphone. Timers intégrés + export <strong>.ics</strong> pour alarmes système qui sonnent même écran éteint.</p>
+  </section>
+
+  <main class="container grid">
+    <section class="card">
+      <h2>Timers d'entraînement (mobile)</h2>
+      <div class="timer-card">
+        <div class="selects">
+          <select id="presetSelect" aria-label="Choisir une séance">
+            <option value="b1a">Bloc 1 · Séance A</option>
+            <option value="b1b">Bloc 1 · Séance B</option>
+            <option value="b1c">Bloc 1 · Séance C</option>
+            <option value="b2a">Bloc 2 · Séance A</option>
+            <option value="b2b">Bloc 2 · Séance B</option>
+            <option value="b2c">Bloc 2 · Séance C</option>
+            <option value="b3a">Bloc 3 · Séance A</option>
+            <option value="b3b">Bloc 3 · Séance B</option>
+            <option value="b3c">Bloc 3 · Séance C</option>
+          </select>
+          <select id="modeSelect" aria-label="Mode du minuteur">
+            <option value="web">Mode chrono (nécessite écran allumé)</option>
+            <option value="ics">Mode alarme (calendrier .ics)</option>
+          </select>
+        </div>
+        <div class="selects">
+          <input type="datetime-local" id="startAt" aria-label="Heure de début pour .ics" />
+          <select id="tzSelect" aria-label="Fuseau horaire">
+            <option value="local" selected>Fuseau local</option>
+            <option value="UTC">UTC</option>
+          </select>
+        </div>
+        <div class="timer-display" id="timerDisplay">00:00</div>
+        <div class="timer-step" id="timerStep">Sélectionne un preset puis <strong>Démarrer</strong>.</div>
+        <div class="timer-controls sticky-bottom">
+          <div class="bottom-bar">
+            <button class="btn" id="startBtn">▶️ Démarrer</button>
+            <button class="btn" id="pauseBtn" disabled>⏸️ Pause</button>
+            <button class="btn" id="resetBtn" disabled>⟲ Réinitialiser</button>
+            <button class="btn" id="wakelockBtn" title="Garder l'écran allumé">🔒 Écran allumé</button>
+          </div>
+          <div style="margin-top:8px; text-align:center">
+            <button class="btn" id="exportIcsBtn" title="Exporter calendrier (.ics)">📅 Export .ics (alarmess écran éteint)</button>
+          </div>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:8px">
+        ⚠️ Les navigateurs mobiles suspendent les sons/minuteurs en arrière‑plan. Pour des alarmes fiables <em>écran éteint</em>, utilise le bouton <strong>Export .ics</strong> et ajoute l'événement à ton agenda (l'alarme sera gérée par le système).
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Principes & Échauffement</h2>
+      <div class="sessions">
+        <div>
+          <h3>Principes clés</h3>
+          <ul id="principles" class="clean"></ul>
+          <span class="pill">RIR 1–2</span> <span class="pill">Excentriques 6–10 s</span> <span class="pill">Repos lourds 2–4 min</span>
+        </div>
+        <div>
+          <h3>Échauffement (10–12 min)</h3>
+          <ul id="warmup" class="clean"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Bloc 1 – Base & tissus (Sem. 1–4)</h2>
+      <p class="muted">Ordre vérifié : exercice le plus dur juste après l'échauffement. <span class="pill">Sem. 4 : deload</span></p>
+      <div class="sessions" id="block1"></div>
+    </section>
+
+    <section class="card">
+      <h2>Bloc 2 – Intensification (Sem. 5–8)</h2>
+      <p class="muted"><span class="pill">Sem. 8 : deload</span></p>
+      <div class="sessions" id="block2"></div>
+    </section>
+
+    <section class="card">
+      <h2>Bloc 3 – Réalisation (Sem. 9–12)</h2>
+      <p class="muted"><span class="pill">Sem. 12 : test</span></p>
+      <div class="sessions" id="block3"></div>
+      <details style="margin-top:10px">
+        <summary><strong>Semaine 12 – Test & repères</strong></summary>
+        <ul class="clean">
+          <li>Singles 1‑bras avec assistance minimale → tente sans aide si propre.</li>
+          <li>Repères : excentriques 8–10 s × 3–5; isos top & mid 20 s; uneven 4×6; lestées 3×3 à +15–25 % PDC.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Suivi hebdo</h2>
+      <div id="weeks" class="weeks"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn" id="weeksReset">Réinitialiser</button>
+        <button class="btn" id="weeksExport">Exporter</button>
+        <input type="file" id="weeksImportFile" accept="application/json" style="display:none" />
+        <button class="btn" id="weeksImport">Importer</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <p>© Programme traction 1‑bras. Site statique. Aucune donnée envoyée. Checklists & préférences stockées localement.</p>
+  </footer>
+
+  <script>
+    // ======================= Données =======================
+    const PRINCIPLES = [
+      "Fréquence : 3 séances/sem (ex. Lun–Jeu–Sam).",
+      "Intensité : garde 1–2 reps en réserve (évite l’échec).",
+      "Tempo : contrôle total ; excentriques lents (6–10 s).",
+      "Assistance réglable : anneau/serviette, pied sur box, ou bande – réduis l’assistance au fil des semaines.",
+      "Ordre vérifié : échauffement → exercice le plus dur → secondaires → accessoires → préhab/core (rien de max en fin de séance)."
+    ];
+
+    const WARMUP = [
+      "Pendaisons actives 2×20 s (dépressions scapulaires).",
+      "Rotateurs externes élastique 2×12/bras.",
+      "Scap pull‑ups 2×8 (à 2 mains).",
+      "Poignets/avant‑bras : pronation–supination 2×12, extensions de poignet 2×15.",
+      "Core : hollow hold 2×20–30 s."
+    ];
+
+    const BLOCKS = [
+      {id:1, title:"Bloc 1 – Base & tissus (Sem. 1–4)", weeks:[1,2,3,4], flags:{4:'DELOAD'}, sessions:{
+        A:{ title:"Séance A (ordre vérifié)", rest:"2–3 min excentriques/isos; 90–120 s le reste.", items:[
+            "Excentriques 1‑bras (assistées) : 3×3–5/bras @ 4–6 s.",
+            "Isométriques 1‑bras (haut/milieu/bas) : 2–3 séries × 10–15 s.",
+            "Archer pull‑ups : 3×5–8/side.",
+            "Préhab coude (curl marteau/inversé) : 3×12–15.",
+            "Core anti‑rotation (side‑plank) : 3×20–30 s/side."
+        ]},
+        B:{ title:"Séance B (ordre vérifié)", rest:"2–4 min lestées; 2 min uneven; 90 s accessoires.", items:[
+            "Tractions lestées (2 mains) : 4×4–6 @ RPE 7–8.",
+            "Uneven pull‑ups : 4×4–6/side.",
+            "Scap depressions 1‑bras (pied sur box) : 3×8–10/bras.",
+            "Farmer carry lourd (1 bras) : 3×20–30 m/side."
+        ]},
+        C:{ title:"Séance C (ordre vérifié)", rest:"2–3 min typewriter/isos; 90–120 s accessoires.", items:[
+            "Typewriter : 3×4–6 allers‑retours.",
+            "Isométriques 1‑bras (milieu) : 3×15–20 s/bras.",
+            "Élastique 1‑bras (lat pull) : 4×6–8/bras.",
+            "Core (dead bug) : 3×8–10/side."
+        ]}
+      }},
+      {id:2, title:"Bloc 2 – Intensification (Sem. 5–8)", weeks:[5,6,7,8], flags:{8:'DELOAD'}, sessions:{
+        A:{ title:"Séance A (ordre vérifié)", rest:"2–3 min excentriques/isos; 2 min uneven; 90 s curl.", items:[
+            "Excentriques 1‑bras : 4×3/bras @ 6–8 s (ajoute 1–2 kg si facile).",
+            "Isométriques 1‑bras (haut & milieu) : 2×15–20 s.",
+            "Uneven pull‑ups : 4×5/side.",
+            "Curl brachial + supination : 3×10–12."
+        ]},
+        B:{ title:"Séance B (ordre vérifié)", rest:"3–4 min lestées; 2 min archer; 90 s accessoires.", items:[
+            "Tractions lestées : 5×3 @ RPE 8–9.",
+            "Archer stricts : 3×6/side.",
+            "Scap pull‑ups (2 mains) : 3×10 (pause 1 s).",
+            "Pallof press : 3×10–12/side."
+        ]},
+        C:{ title:"Séance C (ordre vérifié)", rest:"2–3 min entre singles; 2–3 min contrast; 90 s hangs.", items:[
+            "Concentriques 1‑bras assistées : 6–8×1–3/bras @ RPE 7–8.",
+            "Contrast : 1 excentrique 8–10 s → 1–2 reps assistées (×3).",
+            "One‑arm hang assisté : 3×8–12 s/bras."
+        ]}
+      }},
+      {id:3, title:"Bloc 3 – Réalisation (Sem. 9–12)", weeks:[9,10,11,12], flags:{12:'TEST'}, sessions:{
+        A:{ title:"Séance A (ordre vérifié)", rest:"2–3 min singles; 2 min iso; 90–120 s entretien.", items:[
+            "Tractions 1‑bras assistées « faibles » : 5–7×1–2/bras @ RPE 8–9.",
+            "Isométriques 1‑bras (milieu) : 3×10–15 s/bras.",
+            "Typewriter/archer : 3×4/side."
+        ]},
+        B:{ title:"Séance B (ordre vérifié)", rest:"3–4 min lestées; 2–3 min excentriques; 90 s accessoires.", items:[
+            "Tractions lestées (entretien) : 3×2–3 (lourdes).",
+            "Excentriques 1‑bras : 3×2/bras @ 10 s.",
+            "Scap 1‑bras : 3×8/bras.",
+            "Hollow rocks : 3×15–20."
+        ]},
+        C:{ title:"Séance C (ordre vérifié)", rest:"2–3 min entre singles; 90–120 s le reste.", items:[
+            "Test‑like : 6–8 singles/bras (assistance minimale).",
+            "One‑arm hang assisté : 3×10–15 s/bras.",
+            "Pendaison passive : 2×40 s."
+        ]}
+      }}
+    ];
+
+    // Presets pour timer (séquences approximatives éditables si besoin)
+    // Chaque item: {label, sec}
+    const PRESETS = {
+      b1a:[
+        {label:"Échauffement", sec: 10*60},
+        {label:"Excentriques 1‑bras – Série 1", sec: 60}, {label:"Repos", sec: 180},
+        {label:"Excentriques 1‑bras – Série 2", sec: 60}, {label:"Repos", sec: 180},
+        {label:"Excentriques 1‑bras – Série 3", sec: 60}, {label:"Repos", sec: 180},
+        {label:"Isométriques top/mid/bas", sec: 3*60}, {label:"Repos", sec: 120},
+        {label:"Archer pull‑ups", sec: 2*60}
+      ],
+      b1b:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Lestées 2 mains – 1", sec: 60}, {label:"Repos", sec: 210},
+        {label:"Lestées 2 mains – 2", sec: 60}, {label:"Repos", sec: 210},
+        {label:"Lestées 2 mains – 3", sec: 60}, {label:"Repos", sec: 210},
+        {label:"Uneven – séries", sec: 2*60}
+      ],
+      b1c:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Typewriter", sec: 3*60}, {label:"Isos milieu", sec: 3*45}, {label:"Élastique 1‑bras", sec: 4*45}
+      ],
+      b2a:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Excentriques 1‑bras – 1", sec: 60}, {label:"Repos", sec: 180},
+        {label:"Excentriques 1‑bras – 2", sec: 60}, {label:"Repos", sec: 180},
+        {label:"Excentriques 1‑bras – 3", sec: 60}, {label:"Repos", sec: 180},
+        {label:"Isos haut/mid", sec: 2*60}
+      ],
+      b2b:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Lestées – 1", sec: 60}, {label:"Repos", sec: 210},
+        {label:"Lestées – 2", sec: 60}, {label:"Repos", sec: 210},
+        {label:"Lestées – 3", sec: 60}, {label:"Repos", sec: 210},
+        {label:"Archer stricts", sec: 2*60}
+      ],
+      b2c:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Singles assistés – boucle", sec: 6*90}, {label:"Contrast (ecc→assiste)", sec: 3*120}
+      ],
+      b3a:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Singles assistés", sec: 7*90}, {label:"Isos milieu", sec: 3*60}, {label:"Typewriter/archer", sec: 3*60}
+      ],
+      b3b:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Lestées 2–3 reps", sec: 3*90}, {label:"Excentriques 10 s", sec: 3*60}, {label:"Scap 1‑bras", sec: 3*45}
+      ],
+      b3c:[
+        {label:"Échauffement", sec: 8*60},
+        {label:"Test‑like singles", sec: 8*90}, {label:"One‑arm hang", sec: 3*45}, {label:"Pendaison passive", sec: 2*40}
+      ]
+    };
+
+    // ======================= Rendu fixe =======================
+    const elP = document.getElementById('principles'); PRINCIPLES.forEach(t=>{const li=document.createElement('li'); li.textContent=t; elP.appendChild(li)});
+    const elW = document.getElementById('warmup'); WARMUP.forEach(t=>{const li=document.createElement('li'); li.textContent=t; elW.appendChild(li)});
+
+    const renderSession = (s)=>{const d=document.createElement('div'); d.className='session'; const h=document.createElement('h3'); h.textContent=s.title; d.appendChild(h); const ul=document.createElement('ul'); ul.className='clean'; s.items.forEach(it=>{const li=document.createElement('li'); li.textContent=it; ul.appendChild(li)}); d.appendChild(ul); const p=document.createElement('p'); p.className='muted'; p.textContent='Repos : '+s.rest; d.appendChild(p); return d};
+    const mountBlock = (block, id)=>{const root=document.getElementById(id); ['A','B','C'].forEach(k=>root.appendChild(renderSession(block.sessions[k]))) };
+    mountBlock(BLOCKS[0],'block1'); mountBlock(BLOCKS[1],'block2'); mountBlock(BLOCKS[2],'block3');
+
+    // ======================= Suivi hebdo =======================
+    const weeksHost = document.getElementById('weeks');
+    const WEEKS_ALL = [...BLOCKS[0].weeks,...BLOCKS[1].weeks,...BLOCKS[2].weeks];
+    const keyFor = (w,s)=>`onearm-v2-week-${w}-${s}`;
+    WEEKS_ALL.forEach(w=>{
+      const row=document.createElement('div'); row.className='week-row';
+      const lab=document.createElement('div'); lab.className='label'; lab.textContent=`Semaine ${w}`; const f=BLOCKS.find(b=>b.weeks.includes(w)); if(f&&f.flags&&f.flags[w]){const span=document.createElement('span'); span.className='pill'; span.textContent=f.flags[w]; lab.appendChild(span)}; row.appendChild(lab);
+      ['A','B','C'].forEach(s=>{const wr=document.createElement('label'); wr.className='cb'; const cb=document.createElement('input'); cb.type='checkbox'; const k=keyFor(w,s); cb.checked=localStorage.getItem(k)==='1'; cb.addEventListener('change',()=>localStorage.setItem(k,cb.checked?'1':'0')); const sp=document.createElement('span'); sp.textContent=`Séance ${s}`; wr.appendChild(cb); wr.appendChild(sp); row.appendChild(wr)});
+      weeksHost.appendChild(row);
+    });
+    document.getElementById('weeksReset').addEventListener('click',()=>{ if(!confirm('Réinitialiser toutes les cases ?')) return; WEEKS_ALL.forEach(w=>['A','B','C'].forEach(s=>localStorage.removeItem(keyFor(w,s)))); document.querySelectorAll('#weeks input[type="checkbox"]').forEach(cb=>cb.checked=false) });
+    document.getElementById('weeksExport').addEventListener('click',()=>{const data={}; WEEKS_ALL.forEach(w=>['A','B','C'].forEach(s=>data[keyFor(w,s)]=localStorage.getItem(keyFor(w,s))||'0')); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='progress_onearm.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),3000)});
+    document.getElementById('weeksImport').addEventListener('click',()=>document.getElementById('weeksImportFile').click());
+    document.getElementById('weeksImportFile').addEventListener('change',async e=>{const f=e.target.files?.[0]; if(!f) return; const txt=await f.text(); try{const data=JSON.parse(txt); Object.entries(data).forEach(([k,v])=>localStorage.setItem(k,v)); document.querySelectorAll('#weeks .week-row').forEach((row,idx)=>{const week=WEEKS_ALL[idx]; const boxes=row.querySelectorAll('input[type="checkbox"]'); ['A','B','C'].forEach((s,i)=>{boxes[i].checked=(localStorage.getItem(keyFor(week,s))==='1')})}); alert('Suivi importé ✔')}catch(err){alert('Fichier invalide')}});
+
+    // ======================= Timer (web) =======================
+    let queue=[]; let currentIndex=-1; let remaining=0; let intervalId=null; let audioCtx=null; let wakelock=null;
+    const disp=document.getElementById('timerDisplay'); const stepLbl=document.getElementById('timerStep');
+    const startBtn=document.getElementById('startBtn'); const pauseBtn=document.getElementById('pauseBtn'); const resetBtn=document.getElementById('resetBtn');
+
+    function fmt(sec){const m=Math.floor(sec/60).toString().padStart(2,'0'); const s=Math.floor(sec%60).toString().padStart(2,'0'); return `${m}:${s}`}
+    function beep(ms=500){try{ if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();} const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type='sine'; o.frequency.value=880; g.gain.value=0.05; o.start(); setTimeout(()=>{o.stop();}, ms); if(navigator.vibrate) navigator.vibrate([60,60,60]); }catch(e){} }
+
+    async function toggleWake(){ const btn=document.getElementById('wakelockBtn'); if(!('wakeLock' in navigator)){ alert("Wake Lock non pris en charge sur ce navigateur"); return; } try{ if(!wakelock){ wakelock=await navigator.wakeLock.request('screen'); btn.textContent='🔓 Écran allumé (ON)'; wakelock.addEventListener('release',()=>{btn.textContent='🔒 Écran allumé'}) } else { wakelock.release(); wakelock=null; btn.textContent='🔒 Écran allumé'; } }catch(e){ alert('Impossible d\'activer le Wake Lock'); } }
+
+    function loadPreset(){ const key=document.getElementById('presetSelect').value; queue = (PRESETS[key]||[]).map(x=>({...x})); currentIndex=-1; remaining=0; updateDisplay(); }
+    function updateDisplay(){ disp.textContent = fmt(remaining||0); stepLbl.innerHTML = queue[currentIndex]?.label ? `Étape : <strong>${queue[currentIndex].label}</strong>` : 'Prêt'; }
+
+    function nextStep(){ currentIndex++; if(currentIndex>=queue.length){ clearInterval(intervalId); intervalId=null; startBtn.disabled=false; pauseBtn.disabled=true; resetBtn.disabled=false; stepLbl.innerHTML='Terminé ✔'; beep(800); return; } remaining=queue[currentIndex].sec; updateDisplay(); beep(200); }
+
+    function tick(){ if(remaining>0){ remaining-=1; disp.textContent=fmt(remaining); if(remaining<=0){ nextStep(); } } }
+
+    startBtn.addEventListener('click', async ()=>{ if(document.getElementById('modeSelect').value==='ics'){ buildAndDownloadICS(); return; } if(!queue.length) loadPreset(); if(!audioCtx){ try{audioCtx=new (window.AudioContext||window.webkitAudioContext)(); await audioCtx.resume(); }catch(e){} } if(intervalId){ return; } if(currentIndex===-1) nextStep(); intervalId=setInterval(tick,1000); startBtn.disabled=true; pauseBtn.disabled=false; resetBtn.disabled=false; });
+    pauseBtn.addEventListener('click', ()=>{ if(intervalId){ clearInterval(intervalId); intervalId=null; startBtn.disabled=false; pauseBtn.disabled=true; }});
+    resetBtn.addEventListener('click', ()=>{ if(intervalId){ clearInterval(intervalId); intervalId=null; } currentIndex=-1; remaining=0; updateDisplay(); startBtn.disabled=false; pauseBtn.disabled=true; resetBtn.disabled=true; });
+    document.getElementById('wakelockBtn').addEventListener('click', toggleWake);
+    document.getElementById('presetSelect').addEventListener('change', ()=>{ resetBtn.click(); loadPreset(); });
+
+    // ======================= Export ICS (alarmess écran éteint) =======================
+    function toICSDate(d){ const pad=n=>String(n).padStart(2,'0'); const YYYY=d.getUTCFullYear(); const MM=pad(d.getUTCMonth()+1); const DD=pad(d.getUTCDate()); const hh=pad(d.getUTCHours()); const mm=pad(d.getUTCMinutes()); const ss=pad(d.getUTCSeconds()); return `${YYYY}${MM}${DD}T${hh}${mm}${ss}Z`; }
+
+    function buildICSFromQueue(start){ let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Traction1Bras//OnePager//FR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n'; let cursor=new Date(start);
+      for(let i=0;i<queue.length;i++){
+        const step=queue[i]; const dtStart = new Date(cursor); const dtEnd = new Date(cursor.getTime()+step.sec*1000);
+        const uid = `onearm-${Date.now()}-${i}@traction`; ics+= 'BEGIN:VEVENT\n'; ics+= `UID:${uid}\n`; ics+= `DTSTAMP:${toICSDate(new Date())}\n`; ics+= `DTSTART:${toICSDate(dtStart)}\n`; ics+= `DTEND:${toICSDate(dtEnd)}\n`; ics+= `SUMMARY:${step.label.replace(/[,\n]/g,' ')}\n`; ics+= 'BEGIN:VALARM\nACTION:DISPLAY\nDESCRIPTION:Etape\nTRIGGER:PT0S\nEND:VALARM\n'; ics+= 'END:VEVENT\n'; cursor=dtEnd; }
+      ics+='END:VCALENDAR\n'; return ics; }
+
+    function buildAndDownloadICS(){ if(!queue.length) loadPreset(); const inp=document.getElementById('startAt'); let start=new Date(); if(inp && inp.value){ start = new Date(inp.value); }
+      // Convert local to UTC automatically via toICSDate; if tzSelect==='UTC', we treat input as UTC already
+      const ics = buildICSFromQueue(start);
+      const blob = new Blob([ics], {type:'text/calendar'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='seance_traction_one_arm.ics'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+      alert('Fichier .ics généré. Ajoute-le à ton calendrier pour des alarmes fiables, même écran éteint.');
+    }
+    document.getElementById('exportIcsBtn').addEventListener('click', buildAndDownloadICS);
+
+    // ======================= Thème & impression =======================
+    const themeBtn=document.getElementById('themeBtn'); const root=document.body; const saveTheme=t=>localStorage.setItem('theme-onearm',''+t); const loadTheme=()=>localStorage.getItem('theme-onearm')||'light'; const applyTheme=t=>{ root.className = (t==='dark')? '' : 'light'; root.dataset.theme=t; themeBtn.textContent = (t==='dark')? '🌞 Thème' : '🌗 Thème';}; applyTheme(loadTheme()); themeBtn.addEventListener('click',()=>{const next=(root.dataset.theme==='dark')?'light':'dark'; applyTheme(next); saveTheme(next);});
+    document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+    // Init
+    loadPreset(); updateDisplay();
+  </script>
+</body>
+</html>
