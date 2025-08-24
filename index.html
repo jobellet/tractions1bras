@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#111827" />
+  <meta name="color-scheme" content="light dark" />
   <title>Traction à un bras – 12 semaines (mobile)</title>
   <meta name="description" content="Programme 12 semaines optimisé smartphone pour progresser vers la traction à un bras. Timers intégrés + export calendrier (.ics) pour alarmes qui sonnent écran éteint." />
   <style>
@@ -407,7 +408,25 @@
     document.getElementById('exportIcsBtn').addEventListener('click', buildAndDownloadICS);
 
     // ======================= Thème & impression =======================
-    const themeBtn=document.getElementById('themeBtn'); const root=document.body; const saveTheme=t=>localStorage.setItem('theme-onearm',''+t); const loadTheme=()=>localStorage.getItem('theme-onearm')||'light'; const applyTheme=t=>{ root.className = (t==='dark')? '' : 'light'; root.dataset.theme=t; themeBtn.textContent = (t==='dark')? '🌞 Thème' : '🌗 Thème';}; applyTheme(loadTheme()); themeBtn.addEventListener('click',()=>{const next=(root.dataset.theme==='dark')?'light':'dark'; applyTheme(next); saveTheme(next);});
+    const themeBtn=document.getElementById('themeBtn');
+    const root=document.body;
+    const saveTheme=t=>localStorage.setItem('theme-onearm',''+t);
+    const loadTheme=()=>{
+      const saved=localStorage.getItem('theme-onearm');
+      if(saved) return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    const applyTheme=t=>{
+      root.className = (t==='dark')? '' : 'light';
+      root.dataset.theme=t;
+      themeBtn.textContent = (t==='dark')? '🌞 Thème' : '🌗 Thème';
+    };
+    applyTheme(loadTheme());
+    themeBtn.addEventListener('click',()=>{
+      const next=(root.dataset.theme==='dark')?'light':'dark';
+      applyTheme(next);
+      saveTheme(next);
+    });
     document.getElementById('printBtn').addEventListener('click',()=>window.print());
 
     // Init
