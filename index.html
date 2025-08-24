@@ -27,6 +27,9 @@
     .hero h1{font-size:clamp(22px,5vw,34px);margin:0 0 4px}
     .muted{color:var(--muted)}
 
+    .top-info{display:grid;gap:12px;margin:12px 0}
+    .now-text{margin:0;font-weight:600;font-size:clamp(18px,4vw,22px)}
+
     .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
     .card h2{margin:6px 0 8px;font-size:20px}
     .card h3{margin:10px 0 6px;font-size:17px}
@@ -80,6 +83,22 @@
   <section class="hero container">
     <h1>Programme Traction à un bras — 12 semaines</h1>
     <p class="muted">Optimisé smartphone. Timers intégrés + export <strong>.ics</strong> pour alarmes système qui sonnent même écran éteint.</p>
+  </section>
+
+  <section class="container top-info">
+    <div class="card">
+      <h2>Séance à faire maintenant</h2>
+      <p id="nowText" class="now-text" aria-live="polite">Choisis une séance et lance le minuteur.</p>
+    </div>
+    <div class="card">
+      <h2>Comment fonctionne ce site ?</h2>
+      <ul class="clean">
+        <li>Sélectionne une séance dans la liste.</li>
+        <li>Lance le minuteur pour suivre les temps de travail et de repos.</li>
+        <li>Option « Mode alarme » : exporte un fichier <strong>.ics</strong> pour des rappels fiables.</li>
+        <li>Coche tes séances terminées dans le suivi hebdomadaire.</li>
+      </ul>
+    </div>
   </section>
 
   <main class="container grid">
@@ -343,7 +362,7 @@
 
     // ======================= Timer (web) =======================
     let queue=[]; let currentIndex=-1; let remaining=0; let intervalId=null; let audioCtx=null; let wakelock=null;
-    const disp=document.getElementById('timerDisplay'); const stepLbl=document.getElementById('timerStep');
+    const disp=document.getElementById('timerDisplay'); const stepLbl=document.getElementById('timerStep'); const nowText=document.getElementById('nowText');
     const startBtn=document.getElementById('startBtn'); const pauseBtn=document.getElementById('pauseBtn'); const resetBtn=document.getElementById('resetBtn');
 
     function fmt(sec){const m=Math.floor(sec/60).toString().padStart(2,'0'); const s=Math.floor(sec%60).toString().padStart(2,'0'); return `${m}:${s}`}
@@ -352,7 +371,13 @@
     async function toggleWake(){ const btn=document.getElementById('wakelockBtn'); if(!('wakeLock' in navigator)){ alert("Wake Lock non pris en charge sur ce navigateur"); return; } try{ if(!wakelock){ wakelock=await navigator.wakeLock.request('screen'); btn.textContent='🔓 Écran allumé (ON)'; wakelock.addEventListener('release',()=>{btn.textContent='🔒 Écran allumé'}) } else { wakelock.release(); wakelock=null; btn.textContent='🔒 Écran allumé'; } }catch(e){ alert('Impossible d\'activer le Wake Lock'); } }
 
     function loadPreset(){ const key=document.getElementById('presetSelect').value; queue = (PRESETS[key]||[]).map(x=>({...x})); currentIndex=-1; remaining=0; updateDisplay(); }
-    function updateDisplay(){ disp.textContent = fmt(remaining||0); stepLbl.innerHTML = queue[currentIndex]?.label ? `Étape : <strong>${queue[currentIndex].label}</strong>` : 'Prêt'; }
+    function updateDisplay(){
+      disp.textContent = fmt(remaining||0);
+      const opt=document.querySelector('#presetSelect option:checked');
+      const currentLabel=queue[currentIndex]?.label;
+      stepLbl.innerHTML = currentLabel ? `Étape : <strong>${currentLabel}</strong>` : 'Prêt';
+      nowText.textContent = currentLabel ? `Exercice en cours : ${currentLabel}` : `Séance sélectionnée : ${opt?.textContent||''}`;
+    }
 
     function nextStep(){ currentIndex++; if(currentIndex>=queue.length){ clearInterval(intervalId); intervalId=null; startBtn.disabled=false; pauseBtn.disabled=true; resetBtn.disabled=false; stepLbl.innerHTML='Terminé ✔'; beep(800); return; } remaining=queue[currentIndex].sec; updateDisplay(); beep(200); }
 
